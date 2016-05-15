@@ -1,0 +1,19 @@
+
+.timerDisplay {
+	width: 30px;
+	height: 20px;
+	padding-top: 50px;
+}
+
+#myButton {
+	height: 35px;
+	width: 75px;
+}
+
+#myTimer {
+	height: 30px;
+	display: inline;
+	vertical-align: bottom;
+}
+
+

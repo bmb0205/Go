@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Projet Uno</title>
+		<link href="custom.css" type="text/css" rel="stylesheet">
+		<script src="jquery-1.12.3.min.js"></script>
+	</head>
+	<body>
+		<form class="form-inline">
+			<input type="text" name="getTimerName()" id="myTimer">
+			<button id="myButton" type="button" value="" onclick="startTimer()">Start!</button><br>
+			<h>Timer name: </h>
+			<div id="timerName"></div><br>
+			<label for="myTimer" class="timerDisplay">0.000</label>
+		</form>
+
+		<script>
+
+		function startTimer() {
+			document.getElementById("myButton").innerHTML = "Stop!";
+			document.getElementById("timerName").innerHTML = document.getElementById("myTimer").value;
+			var startTime = new Date;
+			var timerId = setInterval(function() {
+				$('.timerDisplay').text((new Date - startTime) / 1000);
+			}, 5);
+			document.getElementById("myButton").onclick = function() { stopTimer(startTime, timerId); };
+
+		}
+
+		function stopTimer(startTime, timerId) {
+			var endTime = new Date
+			var elapsedTime = (endTime - startTime) / 1000
+			alert(elapsedTime + " seconds elapsed");
+			clearInterval(timerId);
+			$('.timerDisplay').text("0.000");
+			document.getElementById("myButton").innerHTML = "Start!";
+			document.getElementById("myButton").onclick = startTimer;
+		}
+		
+		</script>
+	</body>
+</html>
+
