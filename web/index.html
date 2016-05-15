@@ -17,14 +17,23 @@
 		<script>
 
 		function startTimer() {
-			document.getElementById("myButton").innerHTML = "Stop!";
-			document.getElementById("timerName").innerHTML = document.getElementById("myTimer").value;
+			var name = $("#myTimer").value;
+			$("#myButton").html("Stop!");
+			$("#timerName").html($("#myTimer").val());
+
+			// $.get("http://localhost:8080/all", {timerName : name} );
+
+			// $.ajax({
+			// 	url: "http://localhost:8080/",
+			// 	data: {timerName: name}
+			// }).done(function (data) {
+			// 	alert(data);
+			// });
 			var startTime = new Date;
 			var timerId = setInterval(function() {
 				$('.timerDisplay').text((new Date - startTime) / 1000);
-			}, 5);
+			}, 50);
 			document.getElementById("myButton").onclick = function() { stopTimer(startTime, timerId); };
-
 		}
 
 		function stopTimer(startTime, timerId) {
@@ -32,9 +41,9 @@
 			var elapsedTime = (endTime - startTime) / 1000
 			alert(elapsedTime + " seconds elapsed");
 			clearInterval(timerId);
-			$('.timerDisplay').text("0.000");
-			document.getElementById("myButton").innerHTML = "Start!";
+			$(".timerDisplay").text("0.000");
 			document.getElementById("myButton").onclick = startTimer;
+			$("#myButton").html("Start!");
 		}
 		
 		</script>
