@@ -11,7 +11,6 @@
 			<button id="myButton" type="button" value="" onclick="startTimer()">Start!</button><br>
 			<h>Timer name: </h>
 			<div id="timerName"></div><br>
-			<div id="totalTime">...</div><br>
 			<label for="myTimer" class="timerDisplay">0.000</label>
 		</form>
 
@@ -32,7 +31,7 @@
 				type: "POST"
 			}).done(function(data) {
 				alert("POST request start endpoint hit");
-				alert(data);
+				alert(JSON.stringify(data));
 			});
 		}
 
@@ -44,8 +43,8 @@
 				dataType: "json",
 				type: "POST"
 			}).done(function(data) {
-				alert("POST request start endpoint hit");
-				alert(data);
+				alert("POST request stop endpoint hit");
+				alert(JSON.stringify(data));
 			});
 			clearInterval(timerId);
 			$(".timerDisplay").text("0.000");
