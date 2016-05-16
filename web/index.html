@@ -23,7 +23,7 @@
 			var timerId = setInterval(function() {
 				$('.timerDisplay').text((new Date - startTime) / 1000);
 			}, 50);
-			document.getElementById("myButton").onclick = function() { stopTimer(startTime, timerId); };
+			document.getElementById("myButton").onclick = function() { stopTimer(timerId); };
 			$.ajax({
 				url: "/start",
 				data: JSON.stringify({timername: $("#myTimer").val(), startTime: startTime}),
@@ -32,11 +32,15 @@
 			}).done(function(data) {
 				alert("POST request start endpoint hit");
 				alert(JSON.stringify(data));
+				// alert(data.timername);
+				// alert(data.startTime);
+
 			});
 		}
 
-		function stopTimer(startTime, timerId) {
+		function stopTimer(timerId) {
 			var stopTime = new Date;
+			// alert(stopTim);
 			$.ajax({
 				url: "/stop",
 				data: JSON.stringify({timername: $("#myTimer").val(), stopTime: stopTime}),
@@ -45,6 +49,8 @@
 			}).done(function(data) {
 				alert("POST request stop endpoint hit");
 				alert(JSON.stringify(data));
+				// alert(data.timername);
+				// alert(data.stopTime);
 			});
 			clearInterval(timerId);
 			$(".timerDisplay").text("0.000");

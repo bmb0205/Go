@@ -13,8 +13,6 @@ import (
 type StatusStruct struct {
 	TimerName string `json:"timername"`
 	// TotalTime time.Time `json:"totaltime"`
-	// StartTime time.Time `json:"starttime"`
-	// EndTime   time.Time `json:"endtime"`
 }
 
 type StartStruct struct {
@@ -80,6 +78,7 @@ func start(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	// unmarshals byte stream of json string request into StartStruct instance
 	if r.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.Write(body)
@@ -89,7 +88,7 @@ func start(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(s.TimerName)
 		fmt.Println(s.StartTime)
 	} else {
-		fmt.Println("Should be using a POST request...")
+		fmt.Errorf("should be using a POST request...")
 	}
 
 }
@@ -107,6 +106,7 @@ func stop(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	// unmarshals byte stream of json string request into StartStruct instance
 	if r.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.Write(body)
@@ -116,7 +116,7 @@ func stop(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(s.TimerName)
 		fmt.Println(s.StopTime)
 	} else {
-		fmt.Println("Should be using a POST request...")
+		fmt.Errorf("should be using a POST request...")
 	}
 }
 
