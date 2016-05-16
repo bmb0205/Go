@@ -7,58 +7,114 @@ import (
 	"net/http"
 )
 
-type TimeStruct struct {
-	TimerName   string `json:"timername"`
-	StartTime   string `json:"starttime"`
-	EndTime     string `json:"endtime"`
-	ElapsedTime string `json:"elapsedTime"`
+type StatusStruct struct {
+	TimerName string `json:"timername"`
+	StartTime string `json:"starttime"`
+	EndTime   string `json:"endtime"`
 }
 
-// json endpoint one
+type StartStruct struct {
+	TimerName string `json:"timername"`
+	StartTime string `json:"starttime"`
+}
+
+type StopStruct struct {
+	TimerName string `json:"timername"`
+	EndTime   string `json:"endtime"`
+}
+
+/*
+JSON status endpoint that accepts timer information via AJAX GET request.
+Returns JSON response including total accumulated time for the specified
+timer and and all start/stop pairs that contributed to it.
+*/
 func status(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint hit: status")
 
-	timerName := r.URL.Query().Get("timerName")
-	startTime := r.URL.Query().Get("startTime")
-	endTime := r.URL.Query().Get("endTime")
-	elapsedTime := r.URL.Query().Get("elapsedTime")
-	fmt.Println("timer name is: ", timerName)
-	fmt.Println("start time is: ", startTime)
-	fmt.Println("end time is: ", endTime)
-	fmt.Println("elapsed time is: ", elapsedTime)
+	timer := StatusStruct{
+		r.URL.Query().Get("timerName"),
+		r.URL.Query().Get("startTime"),
+		r.URL.Query().Get("endTime"),
+	}
 
-	// var myMap map[string]string
-	// myMap = make(map[string]string)
-
-	// myMap["startTime"] = r.URL.Query().Get("startTime")
-	// fmt.Println(myMap)
-
-	timer := TimeStruct{timerName, startTime, endTime, elapsedTime}
+	// marshal timer instance, check for errors
 	b, err := json.Marshal(timer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// Check request method type, write header and handle byte version of JSON data b
 	if r.Method == "GET" {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+		fmt.Println(string(b))
 		w.Write(b)
+	} else {
+		fmt.Println("Should be using a GET request...")
 	}
 }
 
-// endpoint two
+/*
+JSON start endpoint accepts timer name and time stamp via AJAX POST request.
+Returns JSON response including the total tracked time for the given timer and
+a created boolean indicating if the timer is new.
+*/
 func start(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint hit: start")
 
+	// instance of TimeStruct to be used in json marshalling
+	timer := StartStruct{
+		r.URL.Query().Get("timerName"),
+		r.URL.Query().Get("startTime"),
+	}
+
+	// marshal timer instance, check for errors
+	b, err := json.Marshal(timer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Check request method type, write header and handle byte version of JSON data b
+	if r.Method == "POST" {
+		w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+		fmt.Println(string(b))
+		w.Write(b)
+	} else {
+		fmt.Println("Should be using a POST request...")
+	}
 }
 
-// endpoint three
-func stop(w http.ResponseWriter, r *http.Request) {
+/*
+JSON stop endpoint accepts timer name and time stamp via AJAX POST request.
+Returns JSON response including the total tracked time for the given timer.
+*/func stop(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint hit: stop")
 
+	// instance of TimeStruct to be used in json marshalling
+	timer := StopStruct{
+		r.URL.Query().Get("TimerName"),
+		r.URL.Query().Get("EndTime"),
+	}
+
+	// marshal timer instance, check for errors
+	b, err := json.Marshal(timer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Check request method type, write header and handle byte version of JSON data b
+	if r.Method == "POST" {
+		w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+		fmt.Println(string(b))
+		w.Write(b)
+	} else {
+		fmt.Println("Should be using a POST request...")
+	}
 }
 
-// request handler
+// Request handler
 func handleRequests() {
 	fs := http.FileServer(http.Dir("web")) // handler for web directory files
 	http.Handle("/", fs)                   // registers FileServer as handler for all requests
