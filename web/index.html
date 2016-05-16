@@ -25,24 +25,30 @@
 				$('.timerDisplay').text((new Date - startTime) / 1000);
 			}, 50);
 			document.getElementById("myButton").onclick = function() { stopTimer(startTime, timerId); };
+			$.ajax({
+				url: "/start",
+				data: JSON.stringify({timername: $("#myTimer").val(), startTime: startTime}),
+				dataType: "json",
+				type: "POST"
+			}).done(function(data) {
+				alert("POST request start endpoint hit");
+				alert(data);
+			});
 		}
 
 		function stopTimer(startTime, timerId) {
-			var endTime = new Date
+			var endTime = new Date;
 			var elapsedTime = (endTime - startTime) / 1000
-			var name = $("#myTimer").val();
-			// $.get("http://localhost:8080/all", {timerName : name} );
-
 			$.ajax({
 				url: "/status",
-				data: {timerName: name, startTime: startTime, endTime: endTime, elapsedTime: elapsedTime},
+				data: {timerName: $("#myTimer").val()},
 				dataType: "json",
 				type: "GET"
-			}).done(function (data) {
-				alert(JSON.stringify(data))
+			}).done(function(data) {
+				alert("GET request status endpoint hit");
+				alert(elapsedTime + " seconds elapsed");
+				alert(JSON.stringify(data));
 			});
-
-			alert(elapsedTime + " seconds elapsed");
 			clearInterval(timerId);
 			$(".timerDisplay").text("0.000");
 			document.getElementById("myButton").onclick = startTimer;
