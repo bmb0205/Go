@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Projet Uno</title>
+		<title>Project Uno</title>
 		<link href="custom.css" type="text/css" rel="stylesheet">
 		<script src="jquery-1.12.3.min.js"></script>
 	</head>
@@ -18,20 +18,8 @@
 		<script>
 
 		function startTimer() {
-			// var name = $("#myTimer").val();
 			$("#myButton").html("Stop!");
 			$("#timerName").html($("#myTimer").val());
-			// $.get("http://localhost:8080/all", {timerName : name} );
-
-			// $.ajax({
-			// 	url: "/status",
-			// 	data: {timerName: name, startTime: , endTime: },
-			// 	dataType: "json",
-			// 	type: "GET"
-			// }).done(function (data) {
-			// 	alert(JSON.stringify(data))
-			// });
-
 			var startTime = new Date;
 			var timerId = setInterval(function() {
 				$('.timerDisplay').text((new Date - startTime) / 1000);
@@ -43,6 +31,7 @@
 			var endTime = new Date
 			var elapsedTime = (endTime - startTime) / 1000
 			var name = $("#myTimer").val();
+			// $.get("http://localhost:8080/all", {timerName : name} );
 
 			$.ajax({
 				url: "/status",
