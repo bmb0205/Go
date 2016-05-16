@@ -11,24 +11,27 @@
 			<button id="myButton" type="button" value="" onclick="startTimer()">Start!</button><br>
 			<h>Timer name: </h>
 			<div id="timerName"></div><br>
+			<div id="totalTime">...</div><br>
 			<label for="myTimer" class="timerDisplay">0.000</label>
 		</form>
 
 		<script>
 
 		function startTimer() {
-			var name = $("#myTimer").value;
+			// var name = $("#myTimer").val();
 			$("#myButton").html("Stop!");
 			$("#timerName").html($("#myTimer").val());
-
 			// $.get("http://localhost:8080/all", {timerName : name} );
 
 			// $.ajax({
-			// 	url: "http://localhost:8080/",
-			// 	data: {timerName: name}
+			// 	url: "/status",
+			// 	data: {timerName: name, startTime: , endTime: },
+			// 	dataType: "json",
+			// 	type: "GET"
 			// }).done(function (data) {
-			// 	alert(data);
+			// 	alert(JSON.stringify(data))
 			// });
+
 			var startTime = new Date;
 			var timerId = setInterval(function() {
 				$('.timerDisplay').text((new Date - startTime) / 1000);
@@ -39,6 +42,17 @@
 		function stopTimer(startTime, timerId) {
 			var endTime = new Date
 			var elapsedTime = (endTime - startTime) / 1000
+			var name = $("#myTimer").val();
+
+			$.ajax({
+				url: "/status",
+				data: {timerName: name, startTime: startTime, endTime: endTime, elapsedTime: elapsedTime},
+				dataType: "json",
+				type: "GET"
+			}).done(function (data) {
+				alert(JSON.stringify(data))
+			});
+
 			alert(elapsedTime + " seconds elapsed");
 			clearInterval(timerId);
 			$(".timerDisplay").text("0.000");
