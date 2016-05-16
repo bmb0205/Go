@@ -24,7 +24,7 @@ type StartStruct struct {
 
 type StopStruct struct {
 	TimerName string `json:"timername"`
-	// EndTime   string `json:"endtime"`
+	StopTime  string `json:"stoptime"`
 }
 
 // func (statusStruct *StatusStruct) SetStartTime(time startTime) {
@@ -86,12 +86,6 @@ func start(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	// b, err := json.Marshal(body)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
-
 	if r.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Println(err)
@@ -137,31 +131,45 @@ func start(w http.ResponseWriter, r *http.Request) {
 /*
 JSON stop endpoint accepts timer name and time stamp via AJAX POST request.
 Returns JSON response including the total tracked time for the given timer.
-*/func stop(w http.ResponseWriter, r *http.Request) {
+*/
+func stop(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint hit: stop")
 
-	// instance of TimeStruct to be used in json marshalling
-	timer := StopStruct{
-		r.URL.Query().Get("TimerName"),
-		// r.URL.Query().Get("EndTime"),
+	r.Header.Add("Content-Type", "application/json")
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
 	}
+
+	if r.Method == "POST" {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Println(err)
+		fmt.Println(string(body))
+		// fmt.Println(json.NewEncoder(w).Encode(body))
+	}
+
+	// instance of TimeStruct to be used in json marshalling
+	// timer := StopStruct{
+	// r.URL.Query().Get("TimerName"),
+	// r.URL.Query().Get("EndTime"),
+	// }
 
 	// marshal timer instance, check for errors
-	b, err := json.Marshal(timer)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	// b, err := json.Marshal(timer)
+	// if err != nil {
+	// http.Error(w, err.Error(), http.StatusInternalServerError)
+	// return
+	// }
 
 	// Check request method type, write header and handle byte version of JSON data b
-	if r.Method == "POST" {
-		w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-		fmt.Println(err)
-		fmt.Println(string(b))
-		w.Write(b)
-	} else {
-		fmt.Println("Should be using a POST request...")
-	}
+	// if r.Method == "POST" {
+	// 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+	// 	fmt.Println(err)
+	// 	fmt.Println(string(b))
+	// 	w.Write(b)
+	// } else {
+	// 	fmt.Println("Should be using a POST request...")
+	// }
 }
 
 // Request handler

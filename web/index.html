@@ -37,17 +37,15 @@
 		}
 
 		function stopTimer(startTime, timerId) {
-			var endTime = new Date;
-			var elapsedTime = (endTime - startTime) / 1000
+			var stopTime = new Date;
 			$.ajax({
-				url: "/status",
-				data: {timerName: $("#myTimer").val()},
+				url: "/stop",
+				data: JSON.stringify({timername: $("#myTimer").val(), stopTime: stopTime}),
 				dataType: "json",
-				type: "GET"
+				type: "POST"
 			}).done(function(data) {
-				alert("GET request status endpoint hit");
-				alert(elapsedTime + " seconds elapsed");
-				alert(JSON.stringify(data));
+				alert("POST request start endpoint hit");
+				alert(data);
 			});
 			clearInterval(timerId);
 			$(".timerDisplay").text("0.000");
