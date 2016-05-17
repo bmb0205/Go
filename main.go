@@ -12,13 +12,14 @@ import (
 
 type StatusStruct struct {
 	TimerName string `json:"timername"`
-	// TotalTime time.Time `json:"totaltime"`
+	// TotalTime time.Time   `json:"totaltime"`
+	// TimePairs []time.Time `json:"timepairs"`
 }
 
 type StartStruct struct {
 	TimerName string    `json:"timername"`
 	StartTime time.Time `json:"starttime"`
-	// IsNew     bool      `json:"isnew"`
+	IsNew     bool      `json:"isnew"`
 }
 
 type StopStruct struct {
@@ -34,8 +35,11 @@ timer and and all start/stop pairs that contributed to it.
 func status(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint hit: status")
 
+	timerName := r.URL.Query().Get("timerName")
+
 	timer := StatusStruct{
-		r.URL.Query().Get("timerName"),
+		timerName,
+		// totalTime,
 		// pairs of start/stop times
 	}
 
@@ -90,7 +94,6 @@ func start(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Errorf("should be using a POST request...")
 	}
-
 }
 
 /*
@@ -106,7 +109,8 @@ func stop(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	// unmarshals byte stream of json string request into StartStruct instance
+	// unmarshals byte stream of json string request into StartStruct instance,
+	// writes request body back as response
 	if r.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.Write(body)
