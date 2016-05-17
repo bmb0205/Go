@@ -11,27 +11,51 @@
 			<button id="myButton" type="button" value="" onclick="startTimer()">Start!</button><br>
 			<h>Timer name: </h>
 			<div id="timerName"></div><br>
+			<div id="holder"></div>
 			<label for="myTimer" class="timerDisplay">0.000</label>
 		</form>
 
 		<script>
 
+		interval = 1000;
+		function updateStatus() {
+			$.ajax({
+				url: "/status",
+				data: JSON.stringify({timerName: $("#myTimer").val()}),
+				dataType: "json",
+				type: "GET",
+				// success: function (data) {
+				// 	$("#holder").html(data.timerName);
+				// },
+				// complete: function(data) {
+				// 	setTimeout(updateStatus, interval);
+				// }
+			}).done(function(data) {
+				alert("did the get");
+				$("#holder").html(JSON.stringify(data));
+				$('.timerDisplay').text((new Date - startTime) / 1000);
+			});
+			// setTimeout(updateStatus, interval);
+		}
 		function startTimer() {
 			$("#myButton").html("Stop!");
 			$("#timerName").html($("#myTimer").val());
 			var startTime = new Date;
+			// timeout = setTimeout(updateStatus, interval);
+			updateStatus();
+			// setTimeout(updateStatus, 1000);
 			var timerId = setInterval(function() {
 				$('.timerDisplay').text((new Date - startTime) / 1000);
-			}, 50);
+			}, 1000);
 			document.getElementById("myButton").onclick = function() { stopTimer(timerId); };
 			$.ajax({
 				url: "/start",
-				data: JSON.stringify({timername: $("#myTimer").val(), startTime: startTime}),
+				data: JSON.stringify({timerName: $("#myTimer").val(), startTime: startTime, isNew: false}),
 				dataType: "json",
 				type: "POST"
 			}).done(function(data) {
-				alert("POST request start endpoint hit");
-				alert(JSON.stringify(data));
+				// alert("POST request start endpoint hit");
+				// alert(JSON.stringify(data));
 				// alert(data.timername);
 				// alert(data.startTime);
 
@@ -40,19 +64,20 @@
 
 		function stopTimer(timerId) {
 			var stopTime = new Date;
-			// alert(stopTim);
 			$.ajax({
 				url: "/stop",
 				data: JSON.stringify({timername: $("#myTimer").val(), stopTime: stopTime}),
 				dataType: "json",
 				type: "POST"
 			}).done(function(data) {
-				alert("POST request stop endpoint hit");
-				alert(JSON.stringify(data));
+				// alert("POST request stop endpoint hit");
+				// alert(JSON.stringify(data));
 				// alert(data.timername);
 				// alert(data.stopTime);
 			});
+			alert($(".timerDisplay").text());
 			clearInterval(timerId);
+			// clearTimeout(timeout);
 			$(".timerDisplay").text("0.000");
 			document.getElementById("myButton").onclick = startTimer;
 			$("#myButton").html("Start!");
