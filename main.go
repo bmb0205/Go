@@ -83,6 +83,7 @@ func start(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// unmarshals byte stream of json string request into StartStruct instance
+	// writes request body back as response...change this to give back total time
 	if r.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.Write(body)
@@ -109,8 +110,8 @@ func stop(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	// unmarshals byte stream of json string request into StartStruct instance,
-	// writes request body back as response
+	// unmarshals byte stream of json string request into StopStruct instance,
+	// writes request body back as response...change this to give back total time
 	if r.Method == "POST" {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.Write(body)
