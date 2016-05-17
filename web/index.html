@@ -21,7 +21,7 @@
 		function updateStatus() {
 			$.ajax({
 				url: "/status",
-				data: JSON.stringify({timerName: $("#myTimer").val()}),
+				data: {timerName: $("#myTimer").val()},
 				dataType: "json",
 				type: "GET",
 				// success: function (data) {
@@ -46,7 +46,7 @@
 			// setTimeout(updateStatus, 1000);
 			var timerId = setInterval(function() {
 				$('.timerDisplay').text((new Date - startTime) / 1000);
-			}, 1000);
+			}, 50);
 			document.getElementById("myButton").onclick = function() { stopTimer(timerId); };
 			$.ajax({
 				url: "/start",

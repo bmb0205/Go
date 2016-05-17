@@ -54,7 +54,6 @@ func status(w http.ResponseWriter, r *http.Request, myMap map[string][]map[strin
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "application/json;charset=UTF-8")
 		fmt.Println(err)
-		// fmt.Println()
 		bytes := []byte(b)
 		fmt.Println(string(bytes))
 
@@ -73,17 +72,6 @@ func status(w http.ResponseWriter, r *http.Request, myMap map[string][]map[strin
 	}
 	// fmt.Println(myMap)
 }
-
-// func New() *Stopwatch {
-// 	var sw Stopwatch
-// 	return &sw
-// }
-
-// func (s *Stopwatch) Start() {
-// 	diff := time.Now().Sub(s.stop)
-// 	s.start = s.start.Add(diff)
-// 	s.stop = time.Time{}
-// }
 
 /*
 JSON start endpoint accepts timer name and time stamp via AJAX POST request.
@@ -112,16 +100,25 @@ func start(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string
 	// unmarshals byte stream of json string request into StartStruct instance
 	// writes request body back as response...change this to give back total time
 	if r.Method == "POST" {
+		startTime := time.Now()
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.Write(body)
 		bytes := []byte(body)
 		var s StartStruct
 		json.Unmarshal(bytes, &s)
 
+		// s.StartTime is time stamp sent from js ajax post request
+		// might be 2 sec delay from s.StartTime and startTime (time.Now())
+		// true start time is s.StartTime
+
 		subMap := map[string]time.Time{
-			"startTime": s.StartTime,
+			"startTime": startTime,
 			"stopTime":  time.Now(), // placeholder for future real stop time
 		}
+		// fmt.Println(startTime)
+		// fmt.Println(s.StartTime)
+		// fmt.Println(startTime.Sub(s.StartTime))
+		// fmt.Println(s.StartTime)
 		myMap[s.TimerName] = append(myMap[s.TimerName], subMap)
 		// fmt.Println(myMap)
 
@@ -148,13 +145,18 @@ func stop(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string]
 	// unmarshals byte stream of json string request into StopStruct instance,
 	// writes request body back as response...change this to give back total time
 	if r.Method == "POST" {
+		stopTime := time.Now() // this needs the delay subtracted from it for a true value
+
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.Write(body)
 		bytes := []byte(body)
 		var s StopStruct
 		json.Unmarshal(bytes, &s)
+		myMap[s.TimerName][len(myMap[s.TimerName])-1]["stopTime"] = stopTime
 
-		myMap[s.TimerName][len(myMap[s.TimerName])-1]["stopTime"] = s.StopTime
+		// 'stop' pressed by client...example 2 sec delay...stop timestamp (time.Now()) called here
+		// delay added 2 sec to total time so a false reading is given
+		// must subtract delay from time.Now()
 
 		for name, valueMap := range myMap {
 			fmt.Println(name)
@@ -162,8 +164,11 @@ func stop(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string]
 				start := valueMap[i]["startTime"]
 				stop := valueMap[i]["stopTime"]
 				fmt.Println(start)
+				// fmt.Println(stop  s.StopTime)
 				fmt.Println(stop)
-				fmt.Println(stop.Sub(start))
+				// fmt.Println(s.StopTime)
+				// fmt.Println(stop.Sub(s.StopTime))
+				fmt.Println(stop.Sub(start)) // difference in js stop timestamp and time.Now() stop timesnamp
 				fmt.Println(" ")
 			}
 		}
