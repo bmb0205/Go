@@ -28,15 +28,7 @@
 					$("#holder").html("Total accumulated time in seconds: " + data.totaltime);
 					var runningTime = (new Date - startTime) / 1000
 					$('.timerDisplay').text('Current active timer: ' + runningTime);
-				// 	$("#holder").html(data.timerName);
-				// },
-				// complete: function(data) {
-				// 	setTimeout(updateStatus, interval);
 				}
-			}).done(function(data) {
-				// $("#holder").html("Total accumulated time in seconds: " + data.totaltime);
-				// var runningTime = (new Date - startTime) / 1000
-				// $('.timerDisplay').text('Current active timer: ' + runningTime);
 			});
 			setTimeout(updateStatus, interval);
 		}
@@ -44,8 +36,6 @@
 			$("#myButton").html("Stop!");
 			$("#timerName").html("Timer name: " + $("#myTimer").val());
 			var startTime = new Date;
-			// timeout = setTimeout(updateStatus, interval);
-			// updateStatus();
 			var timerId = setInterval(function() {
 				$('.timerDisplay').text("Current active timer: " + (new Date - startTime) / 1000);
 			}, 50);
@@ -57,10 +47,6 @@
 				type: "POST"
 			}).done(function(data) {
 				// alert("POST request start endpoint hit");
-				// alert(JSON.stringify(data));
-				// alert(data.timername);
-				// alert(data.startTime);
-
 			});
 		}
 
@@ -73,13 +59,8 @@
 				type: "POST"
 			}).done(function(data) {
 				// alert("POST request stop endpoint hit");
-				// alert(JSON.stringify(data));
-				// alert(data.timername);
-				// alert(data.stopTime);
 			});
-			// alert($(".timerDisplay").text());
 			clearInterval(timerId);
-			// clearTimeout(timeout);
 			$(".timerDisplay").text("Current active timer: 0.000");
 			document.getElementById("myButton").onclick = startTimer;
 			$("#myButton").html("Start!");
