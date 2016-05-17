@@ -27,12 +27,6 @@ type StopStruct struct {
 	StopTime  time.Time `json:"stoptime"`
 }
 
-type Stopwatch struct {
-	Start time.Time     `json:"start"`
-	Stop  time.Time     `json:"stop"`
-	mark  time.Duration `json:"mark"`
-}
-
 /*
 JSON status endpoint that accepts timer information via AJAX GET request.
 Returns JSON response including total accumulated time for the specified
