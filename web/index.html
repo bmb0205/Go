@@ -9,13 +9,13 @@
 		<form class="form-inline">
 			<input type="text" name="getTimerName()" id="myTimer">
 			<button id="myButton" type="button" value="" onclick="startTimer()">Start!</button><br>
-			<h>Timer name: </h>
-			<div id="timerName"></div><br>
-			<div id="holder"></div>
-			<label for="myTimer" class="timerDisplay">0.000</label>
+			<div id="timerName">Timer name: </div>
+			<div id="holder">Total accumulated time in seconds: 0 </div>
+			<label for="myTimer" class="timerDisplay">Current active timer: 0.000</label>
 		</form>
 
 		<script>
+		setTimeout(updateStatus, 1000);
 
 		interval = 1000;
 		function updateStatus() {
@@ -24,28 +24,30 @@
 				data: {timerName: $("#myTimer").val()},
 				dataType: "json",
 				type: "GET",
-				// success: function (data) {
+				success: function (data) {
+					$("#holder").html("Total accumulated time in seconds: " + data.totaltime);
+					var runningTime = (new Date - startTime) / 1000
+					$('.timerDisplay').text('Current active timer: ' + runningTime);
 				// 	$("#holder").html(data.timerName);
 				// },
 				// complete: function(data) {
 				// 	setTimeout(updateStatus, interval);
-				// }
+				}
 			}).done(function(data) {
-				alert("did the get");
-				$("#holder").html(JSON.stringify(data));
-				$('.timerDisplay').text((new Date - startTime) / 1000);
+				// $("#holder").html("Total accumulated time in seconds: " + data.totaltime);
+				// var runningTime = (new Date - startTime) / 1000
+				// $('.timerDisplay').text('Current active timer: ' + runningTime);
 			});
-			// setTimeout(updateStatus, interval);
+			setTimeout(updateStatus, interval);
 		}
 		function startTimer() {
 			$("#myButton").html("Stop!");
-			$("#timerName").html($("#myTimer").val());
+			$("#timerName").html("Timer name: " + $("#myTimer").val());
 			var startTime = new Date;
 			// timeout = setTimeout(updateStatus, interval);
-			updateStatus();
-			// setTimeout(updateStatus, 1000);
+			// updateStatus();
 			var timerId = setInterval(function() {
-				$('.timerDisplay').text((new Date - startTime) / 1000);
+				$('.timerDisplay').text("Current active timer: " + (new Date - startTime) / 1000);
 			}, 50);
 			document.getElementById("myButton").onclick = function() { stopTimer(timerId); };
 			$.ajax({
@@ -75,10 +77,10 @@
 				// alert(data.timername);
 				// alert(data.stopTime);
 			});
-			alert($(".timerDisplay").text());
+			// alert($(".timerDisplay").text());
 			clearInterval(timerId);
 			// clearTimeout(timeout);
-			$(".timerDisplay").text("0.000");
+			$(".timerDisplay").text("Current active timer: 0.000");
 			document.getElementById("myButton").onclick = startTimer;
 			$("#myButton").html("Start!");
 		}
