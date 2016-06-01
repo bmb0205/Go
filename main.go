@@ -27,11 +27,9 @@ type StopStruct struct {
 	StopTime  time.Time `json:"stoptime"`
 }
 
-/*
-JSON status endpoint that accepts timer information via AJAX GET request.
-Returns JSON response including total accumulated time for the specified
-timer and and all start/stop pairs that contributed to it.
-*/
+// JSON status endpoint that accepts timer information via AJAX GET request.
+// Returns JSON response including total accumulated time for the specified
+// timer and and all start/stop pairs that contributed to it.
 func status(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string]time.Time) {
 	fmt.Println(" ")
 	fmt.Println("Endpoint hit: status")
@@ -73,16 +71,14 @@ func status(w http.ResponseWriter, r *http.Request, myMap map[string][]map[strin
 
 }
 
-/*
-JSON start endpoint accepts timer name and time stamp via AJAX POST request.
-Returns JSON response including the total tracked time for the given timer and
-a created boolean indicating if the timer is new.
-*/
+// JSON start endpoint accepts timer name and time stamp via AJAX POST request.
+// Returns JSON response including the total tracked time for the given timer and
+// a created boolean indicating if the timer is new.
 func start(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string]time.Time) {
 	fmt.Println(" ")
 	fmt.Println("Endpoint hit: start")
 
-	// need map of timer name to start and stop values
+	// TODO: need map of timer name to start and stop values
 	// accept post request of timer name and time stamp start time
 	// check if timer name exists in map, set boolean to true or false
 	// return total tracked time which should be current total time
@@ -114,10 +110,8 @@ func start(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string
 	}
 }
 
-/*
-JSON stop endpoint accepts timer name and time stamp via AJAX POST request.
-Returns JSON response including the total tracked time for the given timer.
-*/
+// JSON stop endpoint accepts timer name and time stamp via AJAX POST request.
+// Returns JSON response including the total tracked time for the given timer.
 func stop(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string]time.Time) {
 	fmt.Println(" ")
 	fmt.Println("Endpoint hit: stop")
@@ -138,6 +132,7 @@ func stop(w http.ResponseWriter, r *http.Request, myMap map[string][]map[string]
 		var s StopStruct
 		json.Unmarshal(bytes, &s)
 		myMap[s.TimerName][len(myMap[s.TimerName])-1]["stopTime"] = stopTime
+		fmt.Println(myMap)
 	} else {
 		fmt.Errorf("should be using a POST request...")
 	}
@@ -152,7 +147,7 @@ func handleRequests() {
 	http.HandleFunc("/stop", func(w http.ResponseWriter, r *http.Request) { stop(w, r, myMap) })
 	http.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) { status(w, r, myMap) })
 	log.Println("Listening...")
-	http.ListenAndServe(":8081", nil) // launch server listening on port 8080
+	http.ListenAndServe(":8081", nil) // launch server listening on port 8081
 }
 
 func main() {
